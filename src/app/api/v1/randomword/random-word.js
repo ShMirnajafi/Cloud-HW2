@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import Redis from 'ioredis';
+import 'dotenv'
 
 const redis = new Redis({
     host: process.env.REDIS_HOST,
