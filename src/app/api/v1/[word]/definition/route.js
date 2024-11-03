@@ -8,6 +8,7 @@ const redis = new Redis({
 });
 
 export async function GET(request, context) {
+    console.log("little change")
     const params = await context.params;
     if (!params || !params.word) {
         return NextResponse.json({ error: "Word parameter is missing" }, { status: 400 });
