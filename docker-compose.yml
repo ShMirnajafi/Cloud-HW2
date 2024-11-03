@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - API_KEY=8DnL5+4u0fKfvQ/48ArIAg==gcor4LB7WLzwuM8f
+      - CACHE_TTL=300
+    depends_on:
+      - redis
+    networks:
+      - app-network
+
+  redis:
+    image: ghcr.io/aut-cloud-computing-fall-2024/redis:latest
+    volumes:
+      - redis-data:/data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  redis-data:
