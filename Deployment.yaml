@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: nextjs-app
-          image: english-learning-app:latest
+          image: english-learning-app
           ports:
             - containerPort: 3000
           env:
@@ -41,38 +41,10 @@ spec:
           emptyDir: {}
 
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: nextjs-service
-  namespace: demo-ns
-spec:
-  selector:
-    app: nextjs
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 3000
-  type: ClusterIP
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: redis
-  namespace: demo-ns
-spec:
-  selector:
-    app: redis
-  ports:
-    - protocol: TCP
-      port: 6379
-  clusterIP: None
-
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis
+  name: redis-deployment
   namespace: demo-ns
 spec:
   replicas: 1
@@ -100,7 +72,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: prometheus
+  name: prometheus-deployment
   namespace: demo-ns
 spec:
   replicas: 1
@@ -128,18 +100,3 @@ spec:
             name: prometheus-config
         - name: prometheus-data
           emptyDir: {}
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: prometheus-config
-  namespace: demo-ns
-data:
-  prometheus.yml: |
-    global:
-      scrape_interval: 15s
-    scrape_configs:
-      - job_name: 'nextjs-app'
-        static_configs:
-          - targets: ['nextjs-service:3000']
